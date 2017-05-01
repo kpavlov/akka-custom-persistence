@@ -1,6 +1,6 @@
 package example
 
-import akka.actor.{ActorLogging, ActorNotFound, PoisonPill}
+import akka.actor.{ActorLogging, ActorNotFound, PoisonPill, ReceiveTimeout}
 import akka.persistence.{PersistentActor, RecoveryCompleted, SnapshotOffer}
 import example.api._
 
@@ -16,7 +16,7 @@ class WorkerActor extends PersistentActor with ActorLogging {
 
 
   // passivate the entity when no activity
-  context.setReceiveTimeout(1.seconds)
+  context.setReceiveTimeout(3 seconds)
 
   override def persistenceId: String = {
     //    log.info("Extracting id from {}", self.path.name)
@@ -72,19 +72,7 @@ class WorkerActor extends PersistentActor with ActorLogging {
       this.state = WorkerDetails(cmd.getId, 100, 1)
       context.become(persistentState)
     }
-    case _ => {
-      log.info("Worker {} NOT FOUND. Killing Actor", persistenceId)
-      context.setReceiveTimeout(Duration.Undefined)
-      self ! PoisonPill
-    }
-
-  }
-
-  def newState: Receive = {
-    case cmd: CreateCmd => {
-      log.info("Created: {}", cmd.getId)
-      this.state = WorkerDetails(cmd.getId, 100, 1)
-    }
+    case _ => killSelf("Worker {} NOT FOUND. Killing Actor")
   }
 
   def persistentState: Receive = {
@@ -97,6 +85,13 @@ class WorkerActor extends PersistentActor with ActorLogging {
       WorkerService.getInstance().sleep(state)
     }
     case evt: Event => onEvent(evt)
+    case ReceiveTimeout => killSelf("Killing Worker {} by Timeout to free-up some RAM")
+  }
+
+  def killSelf(reason: String) = {
+    log.info(reason, persistenceId)
+    context.setReceiveTimeout(Duration.Undefined)
+    self ! PoisonPill
   }
 
   override def receiveCommand = transientState;
