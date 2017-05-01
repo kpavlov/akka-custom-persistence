@@ -2,27 +2,27 @@ package example.api;
 
 public class WorkerUpdate {
     
-    private final int health;
-    private final int mana;
+    private final int healthDelta;
+    private final int manaDelta;
 
-    public WorkerUpdate(int health, int mana) {
-        this.health = health;
-        this.mana = mana;
+    public WorkerUpdate(int healthDelta, int manaDelta) {
+        this.healthDelta = healthDelta;
+        this.manaDelta = manaDelta;
     }
 
-    public int getHealth() {
-        return health;
+    public int getHealthDelta() {
+        return healthDelta;
     }
 
-    public int getMana() {
-        return mana;
+    public int getManaDelta() {
+        return manaDelta;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WorkerUpdate{");
-        sb.append("health=").append(health);
-        sb.append(", mana=").append(mana);
+        sb.append("healthDelta=").append(healthDelta);
+        sb.append(", manaDelta=").append(manaDelta);
         sb.append('}');
         return sb.toString();
     }

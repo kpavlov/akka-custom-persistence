@@ -34,8 +34,8 @@ class WorkerActor extends PersistentActor with ActorLogging {
 
   private def updateState(update: WorkerUpdate) {
     state = WorkerDetails(state.id,
-      state.health + update.getHealth(),
-      state.mana + update.getMana
+      state.health + update.getHealthDelta(),
+      state.mana + update.getManaDelta
     )
     log.info("New State: {}", state)
   }
@@ -73,8 +73,9 @@ class WorkerActor extends PersistentActor with ActorLogging {
       context.become(persistentState)
     }
     case _ => {
+      log.info("Worker {} NOT FOUND. Killing Actor", persistenceId)
+      context.setReceiveTimeout(Duration.Undefined)
       self ! PoisonPill
-      throw ActorNotFound(context.actorSelection(self.path.name))
     }
 
   }

@@ -48,6 +48,7 @@ object ExampleApp extends App {
   workerRegion ! new WorkCmd("2")
 //
   workerRegion ! new SleepCmd("2")
+  Thread.sleep(1000)
   workerRegion ! new WorkCmd("1")
   workerRegion ! new WorkCmd("2")
 
@@ -56,7 +57,7 @@ object ExampleApp extends App {
   
   workerRegion ! new SleepCmd("1")
 
-  Thread.sleep(500000)
+  Thread.sleep(60000)
 
   system.terminate()
 

@@ -1,6 +1,7 @@
 package example.persistence;
 
 import example.WorkerDetails;
+import example.api.WorkerUpdate;
 import org.slf4j.Logger;
 import scala.Option;
 
@@ -39,6 +40,9 @@ public class WorkerDAO {
         return details;
     }
 
+    public void writeJournal(String workerId, WorkerUpdate update) {
+        logger.info("Writing to Journal ID {} => {}", workerId, update);
+    }
     public void save(String workerId, WorkerDetails details) {
         stateByIdMap.put(workerId, details);
         logger.info("Saved Details by ID {} => {}", workerId, details);
