@@ -44,20 +44,20 @@ object ExampleApp extends App {
   workerRegion ! new WorkCmd("3")
 
   workerRegion ! new CreateCmd("1")
-//
+  Thread.sleep(1000)
   workerRegion ! new WorkCmd("2")
-//
+  Thread.sleep(1000)
   workerRegion ! new SleepCmd("2")
   Thread.sleep(1000)
   workerRegion ! new WorkCmd("1")
+  Thread.sleep(1000)
   workerRegion ! new WorkCmd("2")
-
 
   Thread.sleep(6000)
   
   workerRegion ! new SleepCmd("1")
 
-  Thread.sleep(60000)
+  Thread.sleep(15000)
 
   system.terminate()
 

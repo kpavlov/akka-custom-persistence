@@ -14,9 +14,8 @@ object WorkerState {
 
 class WorkerActor extends PersistentActor with ActorLogging {
 
-
   // passivate the entity when no activity
-  context.setReceiveTimeout(3 seconds)
+  context.setReceiveTimeout(2 seconds)
 
   override def persistenceId: String = {
     //    log.info("Extracting id from {}", self.path.name)
