@@ -26,7 +26,8 @@ object ExampleApp extends App {
     entityProps = Props[WorkerActor],
     settings = ClusterShardingSettings(system),
     extractEntityId = extractEntityId,
-    extractShardId = extractShardId)
+    extractShardId = extractShardId,
+  )
 
 //  val worker = system.actorSelection("worker-1")
 
