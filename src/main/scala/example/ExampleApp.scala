@@ -1,6 +1,6 @@
 package example
 
-import akka.actor.{ActorRef, ActorSystem, PoisonPill, Props}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.cluster.sharding.{ClusterSharding, ClusterShardingSettings, ShardRegion}
 import example.api._
 
@@ -9,16 +9,15 @@ object ExampleApp extends App {
   val system = ActorSystem("ClusterSystem")
 
   val extractEntityId: ShardRegion.ExtractEntityId = {
-    case c: Command  => (c.getId, c)
+    case c: Command => (c.getId, c)
     case e: Event => (e.getId, e)
-//        case _              => println(s"Unexpected message ${}")
   }
 
   val numberOfShards = 100
 
   val extractShardId: ShardRegion.ExtractShardId = {
     case c: Command ⇒ (c.getId.hashCode % numberOfShards).toString
-    case e: Event => (e.getId.hashCode  % numberOfShards).toString
+    case e: Event => (e.getId.hashCode % numberOfShards).toString
   }
 
   val workerRegion: ActorRef = ClusterSharding(system).start(
@@ -29,18 +28,7 @@ object ExampleApp extends App {
     extractShardId = extractShardId,
   )
 
-//  val worker = system.actorSelection("worker-1")
-
-//  printf(s"Actor ref ${worker}")
-
-//  val locator = system.actorOf(Props[WorkerLocator], "workers")
-
-//  workerRegion ! WorkCmd("1")
-
-//  locator ! Lookup("2")
-
   WorkerService.getInstance().registerShard(system.actorSelection(workerRegion.path))
-//  WorkerService.getInstance().registerShard(workerRegion)
 
   workerRegion ! new WorkCmd("3")
 
@@ -55,13 +43,10 @@ object ExampleApp extends App {
   workerRegion ! new WorkCmd("2")
 
   Thread.sleep(6000)
-  
+
   workerRegion ! new SleepCmd("1")
 
   Thread.sleep(15000)
 
   system.terminate()
-
-
-
 }

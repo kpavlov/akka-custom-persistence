@@ -1,6 +1,6 @@
 package example
 
-import akka.actor.{ActorLogging, ActorNotFound, PoisonPill, ReceiveTimeout}
+import akka.actor.{ActorLogging, PoisonPill, ReceiveTimeout}
 import akka.persistence.{PersistentActor, RecoveryCompleted, SnapshotOffer}
 import example.api._
 
